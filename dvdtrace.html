@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DVD Trace</title>
+</head>
+<body>
+    <canvas id="playground" width="720" height="540"></canvas>
+    <a href="index.html">
+        <button>Watch DVD</button>
+    </a>
+    <style>
+        body {
+            margin: 0;
+            background-color: slategray;
+        }
+    </style>
+</body>
+<script>
+    class DVD {
+        constructor() {
+            this.canvas = document.getElementById('playground');
+            this.ctx = this.canvas.getContext('2d');
+
+            this.ctx.fillStyle = '#000000';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        init() {
+            this.fps = 240;
+            this.dvdX = Math.floor(Math.random() * this.canvas.width) + 1;
+            this.dvdY = Math.floor(Math.random() * this.canvas.height) + 1;
+            this.speedX = 1;
+            this.speedY = -1;
+            this.color = this.generateColor();
+            this.timer = setInterval(this.loop.bind(this), 1000 / this.fps);
+        }
+
+        loop() {
+            this.draw();
+            this.update();
+        }
+
+        draw() {
+            this.ctx.fillStyle = this.color;
+            this.ctx.fillRect(this.dvdX, this.dvdY, 20, 20);
+        }
+
+        update() {
+            this.dvdX += this.speedX;
+            this.dvdY += this.speedY;
+            if (this.dvdX < 0 || this.dvdX > this.canvas.width - 20) {
+                this.speedX *= -1;
+                this.color = this.generateColor();
+            }
+            if (this.dvdY < 0 || this.dvdY > this.canvas.height - 20) {
+                this.speedY *= -1;
+                this.color = this.generateColor();
+            }
+        }
+
+        generateColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    }
+
+    const dvd = new DVD();
+    dvd.init();
+</script>
+</html>
